@@ -17,7 +17,7 @@
  * [+] Создать метод static преобразование даты рождения в возраст (полных лет)
  * [+] Создать метод static преобразование пола из двоичной системы в текстовую
  * [+] Создать метод для форматирования человека с преобразованием возраста и (или) пола
-        в зависимотси от параметров (возвращает новый экземпляр StdClass со всеми полями изначального класса).
+ в зависимотси от параметров (возвращает новый экземпляр StdClass со всеми полями изначального класса).
 
  <?php
 
@@ -32,7 +32,7 @@
 
         private $id, $name, $secondName, $birthDate, $sex, $cityBirth;
 
-        function __construct($id, $name = 0, $secondName = 0, $birthDate = 0, $sex = 0, $cityBirth = 0)
+        function __construct($id, string $name = '', string $secondName = '', $birthDate = 0, $sex = 0, $cityBirth = 0)
         {
             $this->id = $id;
             $this->name = $name;
@@ -50,15 +50,19 @@
 
         private function savePerson()
         {
-            $query = "INSERT INTO `people` (`id`, `name`, `secondName`, `dirthDate`, `sex`, `cityBirth`) 
-                        VALUES ($this->id, $this->name, $this->secondName, $this->birthDate, $this->sex, $this->cityBirth)";
-            return $query;
+            $user = 'user';
+            $pass = 'pass';
+            $dbh = new PDO('mysql:host=localhost;dbname=test', $user, $pass);
+            $dbh->query("INSERT INTO `people` (`id`, `name`, `secondName`, `dirthDate`, `sex`, `cityBirth`) 
+                        VALUES ($this->id, $this->name, $this->secondName, $this->birthDate, $this->sex, $this->cityBirth)");
         }
 
         private function deletePerson()
         {
-            $query = "DELETE FROM `people` WHERE `id`=$this->id";
-            return $query;
+            $user = 'user';
+            $pass = 'pass';
+            $dbh = new PDO('mysql:host=localhost;dbname=test', $user, $pass);
+            $dbh->query("DELETE FROM `people` WHERE `id`=$this->id");
         }
 
         static function birthToAge($birthDate)
