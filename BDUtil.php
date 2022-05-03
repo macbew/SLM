@@ -21,18 +21,11 @@
 
  <?php
 
-    class CRUD
+    class BDUtil
     {
-        /*
-    Класс должен иметь поля:
-    id, имя, фамилия, дата рождения, пол(0,1), город рождения
-     Работа с БД
-     Добавление, удаление записей в бд. 
-    */
-
         private $id, $name, $secondName, $birthDate, $sex, $cityBirth;
 
-        function __construct($id, string $name = '', string $secondName = '', $birthDate = 0, $sex = 0, $cityBirth = 0)
+        function __construct(int $id, string $name = '', string $secondName = '', $birthDate = '', int $sex = 0, $cityBirth = '')
         {
             $this->id = $id;
             $this->name = $name;
@@ -44,7 +37,7 @@
             if ($this->name) {
                 $this->savePerson();
             } else {
-                $this->deletePerson();
+                $this->getPerson($this->id, '=');
             }
         }
 
@@ -57,12 +50,20 @@
                         VALUES ($this->id, $this->name, $this->secondName, $this->birthDate, $this->sex, $this->cityBirth)");
         }
 
-        private function deletePerson()
+        protected function deletePerson($id)
         {
             $user = 'user';
             $pass = 'pass';
             $dbh = new PDO('mysql:host=localhost;dbname=test', $user, $pass);
-            $dbh->query("DELETE FROM `people` WHERE `id`=$this->id");
+            $dbh->query("DELETE FROM `people` WHERE `id` = $id");
+        }
+        protected function getPerson($id = '', $condition = '')
+        {
+            $user = 'user';
+            $pass = 'pass';
+            $dbh = new PDO('mysql:host=localhost;dbname=test', $user, $pass);
+            $query = $dbh->query("SELECT * FROM `people` WHERE `id` $condition $id");
+            return $query;
         }
 
         static function birthToAge($birthDate)
@@ -81,7 +82,7 @@
             return 'man';
         }
 
-        function formated()
+        protected function formated()
         {
             $objStd = new stdClass();
             foreach ($this as $key => $val) {
